@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import styles from "./page.module.css";
 
 interface DatosSensores {
@@ -14,6 +15,8 @@ export default function Home() {
   const [datos, setDatos] = useState<DatosSensores>({});
   const [conectado, setConectado] = useState(false);
   const [ultimaActualizacion, setUltimaActualizacion] = useState("");
+  const [guardando, setGuardando] = useState(false);
+  const [mensajeGuardado, setMensajeGuardado] = useState("");
 
   useEffect(() => {
     async function actualizar() {
@@ -36,6 +39,27 @@ export default function Home() {
     const intervalo = setInterval(actualizar, 5000);
     return () => clearInterval(intervalo);
   }, []);
+
+  async function guardarRegistro() {
+    setGuardando(true);
+    setMensajeGuardado("");
+
+    try {
+      const r = await fetch("/api/guardar", { method: "POST" });
+      const resultado = await r.json();
+
+      if (!r.ok) {
+        throw new Error(resultado.error || "Error al guardar");
+      }
+
+      setMensajeGuardado("Guardado ✅ (" + new Date().toLocaleTimeString() + ")");
+    } catch (err) {
+      const mensaje = err instanceof Error ? err.message : "Error desconocido";
+      setMensajeGuardado("Error al guardar: " + mensaje);
+    } finally {
+      setGuardando(false);
+    }
+  }
 
   return (
     <main className={styles.main}>
@@ -70,6 +94,24 @@ export default function Home() {
           Última actualización: {ultimaActualizacion}
         </div>
       )}
+
+      <button
+        className={styles.botonGuardar}
+        onClick={guardarRegistro}
+        disabled={guardando}
+      >
+        {guardando ? "Guardando..." : "Guardar registro"}
+      </button>
+
+      {mensajeGuardado && (
+        <div className={styles.mensajeGuardado}>{mensajeGuardado}</div>
+      )}
+
+      <div className={styles.actualizado}>
+        <Link href="/registro" style={{ color: "#4dabf7" }}>
+          Ver registro histórico →
+        </Link>
+      </div>
     </main>
   );
 }

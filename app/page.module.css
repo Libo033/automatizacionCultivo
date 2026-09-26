@@ -60,3 +60,27 @@
   font-size: 13px;
   color: #777;
 }
+
+.botonGuardar {
+  margin-top: 25px;
+  font-size: 18px;
+  padding: 14px 32px;
+  border-radius: 12px;
+  border: none;
+  background: #4dabf7;
+  color: #0d2438;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.botonGuardar:disabled {
+  background: #555;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.mensajeGuardado {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #ccc;
+}
