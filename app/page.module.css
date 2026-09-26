@@ -1,0 +1,62 @@
+.main {
+  font-family: Arial, sans-serif;
+  background: #1e1e2f;
+  color: white;
+  text-align: center;
+  min-height: 100vh;
+  padding-top: 40px;
+}
+
+.online,
+.offline {
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.online {
+  color: #6bcf63;
+}
+
+.offline {
+  color: #ff6b6b;
+}
+
+.valores {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.card {
+  background: #2a2a3d;
+  padding: 25px 35px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  min-width: 150px;
+}
+
+.valor {
+  font-size: 45px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.temp {
+  color: #ff6b6b;
+}
+
+.humAire {
+  color: #4dabf7;
+}
+
+.humSuelo {
+  color: #6bcf63;
+}
+
+.actualizado {
+  margin-top: 30px;
+  font-size: 13px;
+  color: #777;
+}
