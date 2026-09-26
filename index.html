@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estación de Sensores - Remoto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e2f;
+      color: white;
+      text-align: center;
+      padding-top: 40px;
+      margin: 0;
+    }
+    h1 { font-size: 28px; }
+    .estado {
+      font-size: 14px;
+      color: #999;
+      margin-top: 5px;
+    }
+    .online { color: #6bcf63; }
+    .offline { color: #ff6b6b; }
+    .valores {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin-top: 30px;
+    }
+    .card {
+      background: #2a2a3d;
+      padding: 25px 35px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      min-width: 150px;
+    }
+    .valor {
+      font-size: 45px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .temp { color: #ff6b6b; }
+    .hum-aire { color: #4dabf7; }
+    .hum-suelo { color: #6bcf63; }
+    .actualizado {
+      margin-top: 30px;
+      font-size: 13px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <h1>Estación de Sensores</h1>
+  <div class="estado" id="estadoConexion">Conectando...</div>
+
+  <div class="valores">
+    <div class="card">
+      <div>Temperatura</div>
+      <div class="valor temp" id="temp">-- °C</div>
+    </div>
+    <div class="card">
+      <div>Humedad Aire</div>
+      <div class="valor hum-aire" id="humAire">-- %</div>
+    </div>
+    <div class="card">
+      <div>Humedad Suelo</div>
+      <div class="valor hum-suelo" id="humSuelo">-- %</div>
+    </div>
+  </div>
+
+  <div class="actualizado" id="ultimaActualizacion"></div>
+
+  <script>
+    async function actualizar() {
+      const estadoEl = document.getElementById('estadoConexion');
+      try {
+        const r = await fetch('/api/data');
+        if (!r.ok) throw new Error('Respuesta no OK');
+        const d = await r.json();
+
+        if (!d || d.temperatura === undefined) {
+          throw new Error('Sin datos aun');
+        }
+
+        document.getElementById('temp').innerHTML = Number(d.temperatura).toFixed(1) + ' °C';
+        document.getElementById('humAire').innerHTML = Number(d.humedadAire).toFixed(1) + ' %';
+        document.getElementById('humSuelo').innerHTML = d.humedadSuelo + ' %';
+
+        estadoEl.innerText = 'Conectado';
+        estadoEl.className = 'estado online';
+
+        document.getElementById('ultimaActualizacion').innerText =
+          'Última actualización: ' + new Date().toLocaleTimeString();
+
+      } catch (err) {
+        estadoEl.innerText = 'Sin datos / Error de conexión';
+        estadoEl.className = 'estado offline';
+      }
+    }
+
+    setInterval(actualizar, 5000);
+    actualizar();
+  </script>
+</body>
+</html>
